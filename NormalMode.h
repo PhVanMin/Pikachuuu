@@ -8,5 +8,5 @@
 void initBoard(CELL_1**);
 void renderBoard(CELL_1**);
 void deleteBoard(CELL_1**);
-void move(CELL_1**, position&, int&, player&, position [], int&, int&);
+void move(CELL_1**, position&, int&, player&, position [], int&);
 void normalMode(player&);

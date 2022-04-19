@@ -77,7 +77,7 @@ void renderList(CELL_2** arr) {
     }
 }
 
-void move(CELL_2** arr, position& pos, int& status, player& p, position selectedPos[], int& boxLeft, int& couple) {
+void move(CELL_2** arr, position& pos, int& status, player& p, position selectedPos[], int& couple) {
     if ((!checkValidPairs(arr))) {
         status = 1;
         return;
@@ -123,12 +123,6 @@ void move(CELL_2** arr, position& pos, int& status, player& p, position selected
                             Sleep(500);
 
                             DifMode(arr, selectedPos[0].y, selectedPos[0].x, selectedPos[1].y, selectedPos[1].x, BG);
-
-                            boxLeft += 2;
-                            if (boxLeft == BOARDHEIGTH * BOARDWIDTH) {
-                                status = 1;
-                                return;
-                            }
                         }
                         else {
                             p1->drawBox(70);
@@ -360,9 +354,6 @@ void difficultMode(player& p) {
     getBackground(BG);
 
     CELL_2** board = new CELL_2 * [BOARDHEIGTH];
-    position selectedPos[] = { {-1, -1}, {-1, -1} };
-    int boxLeft = 0, couple = 2;
-
     initList(board);
 
     goToXY(10, 0);
@@ -381,6 +372,8 @@ void difficultMode(player& p) {
     cout << "Press ESC to quit";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
+    position selectedPos[] = { {-1, -1}, {-1, -1} };
+    int couple = 2;
     position curPosition{ 0, 0 };
     int status = 0; //0. dang choi game
                     //1. het game
@@ -391,12 +384,12 @@ void difficultMode(player& p) {
 
         renderList(board);
 
-        move(board, curPosition, status, p, selectedPos, boxLeft, couple);
+        move(board, curPosition, status, p, selectedPos, couple);
     }
 
     renderList(board);
     deleteList(board);
-
+    Sleep(500);
     system("cls");
 
     if (p.life && status == 1) {

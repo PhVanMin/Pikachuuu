@@ -53,7 +53,7 @@ void renderBoard(CELL_1** board) {
     }
 }
 // di chuyen
-void move(CELL_1** board, position& pos, int& status, player& p, position selectedPos[], int& boxLeft, int& couple) {
+void move(CELL_1** board, position& pos, int& status, player& p, position selectedPos[], int& couple) {
     if ((!checkValidPairs(board))) {
         status = 1;
         return;
@@ -101,12 +101,6 @@ void move(CELL_1** board, position& pos, int& status, player& p, position select
                             board[selectedPos[1].y][selectedPos[1].x].isValid = 0;
                             board[selectedPos[1].y][selectedPos[1].x].deleteBox();
                             if (selectedPos[1].x < 4) displayBackground(bg, selectedPos[1].x, selectedPos[1].y);
-
-                            boxLeft += 2;
-                            if (boxLeft == BOARDHEIGTH * BOARDWIDTH) {
-                                status = 1;
-                                return;
-                            }
                         }
                         else {
                             board[selectedPos[0].y][selectedPos[0].x].drawBox(70);
@@ -338,9 +332,6 @@ void normalMode(player& p) {
     getBackground(bg);
 
     CELL_1** board = new CELL_1 * [BOARDHEIGTH];
-    position selectedPos[] = { {-1, -1}, {-1, -1} };
-    int boxLeft = 0, couple = 2;
-
     initBoard(board);
 
     goToXY(10, 0);
@@ -359,6 +350,8 @@ void normalMode(player& p) {
     cout << "Press ESC to quit";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
+    position selectedPos[] = { {-1, -1}, {-1, -1} };
+    int couple = 2;
     position curPosition{ 0, 0 };
     int status = 0; //0. dang choi game
                     //1. het game
@@ -369,12 +362,12 @@ void normalMode(player& p) {
 
         renderBoard(board);
 
-        move(board, curPosition, status, p, selectedPos, boxLeft, couple);
+        move(board, curPosition, status, p, selectedPos, couple);
     }
 
     renderBoard(board);
     deleteBoard(board);
-
+    Sleep(500);
     system("cls");
 
     if (p.life && status == 1) {
