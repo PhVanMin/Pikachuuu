@@ -12,6 +12,7 @@ void readLeaderBoard();
 void writeLeaderBoard(player);
 void getPlayerInfo(player&);
 void displayStatus(bool);
-void background();
+void getBackground(char [][41]);
+void displayBackground(char [][41], int, int);
 int mainMenu();
 #endif // !_UTILITY_H_

@@ -3,22 +3,22 @@
 #include<conio.h>
 
 void readLeaderBoard() {
-    ifstream f;
-    f.open("leaderboard.txt");
     goToXY(60, 5);
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
-    cout << "Leaderboard";
+    cout << "LEADERBOARD";
     goToXY(30, 6);
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
-    cout << "Name";
+    cout << "NAME";
     goToXY(100, 6);
-    cout << "Point";
+    cout << "POINT";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
     goToXY(30, 7);
     for (int i = 0; i < 75; i++) {
         cout << "=";
     }
 
+    ifstream f;
+    f.open("leaderboard.txt");
     if (f) {
         player p;
 
@@ -38,6 +38,7 @@ void readLeaderBoard() {
             if (i <= 4) SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
             i += 2;
         }
+        f.close();
     }
     _getch();
     system("cls");
@@ -135,42 +136,55 @@ void displayStatus(bool win) {
     }
 }
 
-void background() {
+void getBackground(char bg[][41]) {
     ifstream fin("pika.txt");
     if (fin) {
-        string s;
-        int line = 0;
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
-        while (!fin.eof()) {
-            goToXY(30, 5 + line);
-            getline(fin, s);
-            cout << s << endl;
-            Sleep(100);
-            line++;
+        for (int i = 0; i < 20; i++)
+        {
+            for (int j = 0; j < 41; j++)
+            {
+                bg[i][j] = fin.get();
+            }
+            fin.ignore();
         }
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+        fin.close();
     }
+    else {
+        memset(bg, ' ', sizeof(bg));
+    }
+}
+
+void displayBackground(char bg[][41], int x, int y) {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 11; j++) {
+            goToXY((x + 1) * 10 + j, (y + 1) * 4 + i);
+            cout << bg[y * 4 + i][x * 10 + j];
+        }
+    }
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
 
 int mainMenu() {
     int choice[4] = { 0,0,0,0 }, temp, key, curChoice = 0;
 
+    goToXY(35, 2);
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
+    cout << " ______    __   __  ___      ___       ______  __    __   __    __";
+    goToXY(35, 3);
+    cout << "|   _  \\  |  | |  |/  /     /   \\     /      ||  |  |  | |  |  |  |";
+    goToXY(35, 4);
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
+    cout << "|  |_)  | |  | |  '  /     /  ^  \\   |  ,----'|  |__|  | |  |  |  |";
+    goToXY(35, 5);
+    cout << "|   ___/  |  | |    <     /  /_\\  \\  |  |     |   __   | |  |  |  |";
+    goToXY(35, 6);
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+    cout << "|  |      |  | |  .  \\   /  _____  \\ |  `----.|  |  |  | |  `--'  |";
+    goToXY(35, 7);
+    cout << "| _|      |__| |__|\\__\\ /__/     \\__\\ \\______||__|  |__|  \\______/";
+
     while (1) {
-        goToXY(35, 2);
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 2);
-        cout << " ______    __   __  ___      ___       ______  __    __   __    __";
-        goToXY(35, 3);
-        cout << "|   _  \\  |  | |  |/  /     /   \\     /      ||  |  |  | |  |  |  |";
-        goToXY(35, 4);
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 3);
-        cout << "|  |_)  | |  | |  '  /     /  ^  \\   |  ,----'|  |__|  | |  |  |  |";
-        goToXY(35, 5);
-        cout << "|   ___/  |  | |    <     /  /_\\  \\  |  |     |   __   | |  |  |  |";
-        goToXY(35, 6);
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
-        cout << "|  |      |  | |  .  \\   /  _____  \\ |  `----.|  |  |  | |  `--'  |";
-        goToXY(35, 7);
-        cout << "| _|      |__| |__|\\__\\ /__/     \\__\\ \\______||__|  |__|  \\______/";
 
         choice[curChoice] = 1;
 
@@ -278,7 +292,7 @@ int mainMenu() {
         if (temp = _getch()) {
             if (temp != 224 && temp)
             {
-                if (temp == 13) {
+                if (temp == ENTER_KEY) {
                     system("cls");
                     return curChoice;
                 }

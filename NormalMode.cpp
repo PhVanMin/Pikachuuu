@@ -2,6 +2,8 @@
 #include<iostream>
 using namespace std;
 
+char bg[20][41];
+
 void initBoard(CELL_1** board) {
     for (int i = 0; i < BOARDHEIGTH; i++) { // gan vi tri cho tung o mot
         board[i] = new CELL_1[BOARDWIDTH];
@@ -29,11 +31,15 @@ void initBoard(CELL_1** board) {
 void deleteBoard(CELL_1** board) {
     for (int i = 0; i < BOARDHEIGTH; i++) {
         for (int j = 0; j < BOARDWIDTH; j++) {
-            if (board[i][j].isValid) board[i][j].deleteBox();
+            if (board[i][j].isValid) {
+                board[i][j].deleteBox();
+                if (j < 4) displayBackground(bg, j, i);
+                Sleep(200);
+            }
         }
     }
 
-    for (int i = 0; i < BOARDHEIGTH; i++) { // gan vi tri cho tung o mot
+    for (int i = 0; i < BOARDHEIGTH; i++) {
         delete[]board[i];
     }
     delete[]board;
@@ -56,10 +62,10 @@ void move(CELL_1** board, position& pos, int& status, player& p, position select
     int temp, key;
     temp = _getch();
     if (temp && temp != 224) { // neu ko phai la dau mui ten
-        if (temp == 27) { // neu la ESC
+        if (temp == ESC_KEY) { // neu la ESC
             status = 2;
         }
-        else if (temp == 13) { // neu la Enter
+        else if (temp == ENTER_KEY) { // neu la Enter
             if (pos.x == selectedPos[0].x && pos.y == selectedPos[0].y) {
                 board[selectedPos[0].y][selectedPos[0].x].drawBox(70);
                 Sleep(500);
@@ -90,9 +96,11 @@ void move(CELL_1** board, position& pos, int& status, player& p, position select
 
                             board[selectedPos[0].y][selectedPos[0].x].isValid = 0;
                             board[selectedPos[0].y][selectedPos[0].x].deleteBox();
+                            if (selectedPos[0].x < 4) displayBackground(bg, selectedPos[0].x, selectedPos[0].y);
 
                             board[selectedPos[1].y][selectedPos[1].x].isValid = 0;
                             board[selectedPos[1].y][selectedPos[1].x].deleteBox();
+                            if (selectedPos[1].x < 4) displayBackground(bg, selectedPos[1].x, selectedPos[1].y);
 
                             boxLeft += 2;
                             if (boxLeft == BOARDHEIGTH * BOARDWIDTH) {
@@ -327,6 +335,7 @@ void move(CELL_1** board, position& pos, int& status, player& p, position select
 
 void normalMode(player& p) {
     srand(time(0));
+    getBackground(bg);
 
     CELL_1** board = new CELL_1 * [BOARDHEIGTH];
     position selectedPos[] = { {-1, -1}, {-1, -1} };
@@ -356,8 +365,6 @@ void normalMode(player& p) {
                     //2. nguoi choi chon thoat
 
     while (!status && p.life) {
-        //background();
-
         board[curPosition.y][curPosition.x].isSelected = 1;
 
         renderBoard(board);
@@ -365,12 +372,12 @@ void normalMode(player& p) {
         move(board, curPosition, status, p, selectedPos, boxLeft, couple);
     }
 
+    renderBoard(board);
     deleteBoard(board);
 
+    system("cls");
+
     if (p.life && status == 1) {
-        background();
-        Sleep(1000);
-        system("cls");
         displayStatus(1);
         goToXY(50, 17);
         char c;
@@ -382,7 +389,6 @@ void normalMode(player& p) {
         else writeLeaderBoard(p);
     }
     else if (p.life == 0) {
-        system("cls");
         displayStatus(0);
         writeLeaderBoard(p);
         Sleep(2000);

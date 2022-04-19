@@ -1,9 +1,6 @@
 #pragma once
 #ifndef _STRUCT_H_
-#define _STRUCT_H_
-
-#define BOARDWIDTH 8
-#define BOARDHEIGTH 5
+#define _STRUCT_H_		
 
 #include<string>
 using namespace std;
@@ -16,6 +13,7 @@ using namespace std;
 #define KEY_LEFT 75
 #define KEY_RIGHT 77
 #define ESC_KEY 27
+#define ENTER_KEY 13
 
 struct position {
 	int x, y;

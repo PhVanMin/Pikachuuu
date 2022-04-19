@@ -2,6 +2,8 @@
 #include<iostream>
 using namespace std;
 
+char BG[20][41];
+
 void push(CELL_2*& head, CELL_2* p) {
     if (head == NULL) {
         head = p;
@@ -54,6 +56,10 @@ void deleteList(CELL_2** arr) {
             temp = arr[i];
             arr[i] = arr[i]->next;
             temp->deleteBox();
+            if (temp->j < 4) {
+                displayBackground(BG, temp->j, i);
+                Sleep(500);
+            }
             delete temp;
         }
     }
@@ -80,10 +86,10 @@ void move(CELL_2** arr, position& pos, int& status, player& p, position selected
     int temp, key;
     temp = _getch();
     if (temp && temp != 224) { // neu ko phai la dau mui ten
-        if (temp == 27) { // neu la ESC
+        if (temp == ESC_KEY) { // neu la ESC
             status = 2;
         }
-        else if (temp == 13) { // neu la Enter
+        else if (temp == ENTER_KEY) { // neu la Enter
             if (pos.x == selectedPos[0].x && pos.y == selectedPos[0].y) {
                 CELL_2* temp = findTheNode(arr, pos.y, pos.x);
                 temp->drawBox(70);
@@ -116,7 +122,7 @@ void move(CELL_2** arr, position& pos, int& status, player& p, position selected
                             p2->drawBox(40);
                             Sleep(500);
 
-                            DifMode(arr, selectedPos[0].y, selectedPos[0].x, selectedPos[1].y, selectedPos[1].x);
+                            DifMode(arr, selectedPos[0].y, selectedPos[0].x, selectedPos[1].y, selectedPos[1].x, BG);
 
                             boxLeft += 2;
                             if (boxLeft == BOARDHEIGTH * BOARDWIDTH) {
@@ -351,6 +357,7 @@ void move(CELL_2** arr, position& pos, int& status, player& p, position selected
 
 void difficultMode(player& p) {
     srand(time(0));
+    getBackground(BG);
 
     CELL_2** board = new CELL_2 * [BOARDHEIGTH];
     position selectedPos[] = { {-1, -1}, {-1, -1} };
@@ -380,8 +387,6 @@ void difficultMode(player& p) {
                     //2. nguoi choi chon thoat
 
     while (!status && p.life) {
-        //background();
-
         findTheNode(board, curPosition.y, curPosition.x)->isSelected = 1;
 
         renderList(board);
@@ -389,12 +394,12 @@ void difficultMode(player& p) {
         move(board, curPosition, status, p, selectedPos, boxLeft, couple);
     }
 
+    renderList(board);
     deleteList(board);
 
+    system("cls");
+
     if (p.life && status == 1) {
-        background();
-        Sleep(1000);
-        system("cls");
         displayStatus(1);
         goToXY(50, 17);
         char c;
@@ -406,10 +411,9 @@ void difficultMode(player& p) {
         else writeLeaderBoard(p);
     }
     else if (p.life == 0) {
-        system("cls");
         displayStatus(0);
         writeLeaderBoard(p);
-        _getch();
+        Sleep(500);
     }
     system("cls");
 }

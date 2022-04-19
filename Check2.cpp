@@ -25,13 +25,23 @@ bool Icheck(CELL_2** arr, int y1, int x1, int y2, int x2) {
             mi++;
             temp = findTheNode(arr, mi, x1);
             tempHead = temp;
-            if (mi > ma) {
+            if (mi == ma) {
                 return true;
+            }
+            if (temp != NULL) {
+                return false;
             }
         }
         while (temp != NULL) {
             i++;
             temp = findTheNode(arr, mi + i, x1);
+            while (temp == NULL) {
+                i++;
+                temp = findTheNode(arr, mi + i, x1);
+                if (mi + i > ma) {
+                    return true;
+                }
+            }
             if (mi + i > ma) {
                 return true;
             }
@@ -115,6 +125,11 @@ bool Lcheck(CELL_2** arr, int y1, int x1, int y2, int x2) {
                 return true;
             }
         }
+        else if (Icheck(arr, y1, x1, y1, x)) {
+            if (Icheck(arr, y2, x2, y, x2)) {
+                return true;
+            }
+        }
     }
 
     temp = findTheNode(arr, y2, x1);
@@ -144,10 +159,16 @@ bool Lcheck(CELL_2** arr, int y1, int x1, int y2, int x2) {
                 return true;
             }
         }
+        else if (Icheck(arr, y2, x2, y2, x)) {
+            if (Icheck(arr, y1, x1, y, x1)) {
+                return true;
+            }
+        }
     }
 
     return false;
 }
+
 
 bool UandZcheck(CELL_2** arr, int y1, int x1, int y2, int x2) {
     if ((findTheNode(arr, y1 - 1, x1) == NULL && findTheNode(arr, y2 - 1, x2) == NULL || findTheNode(arr, y1 + 1, x1) == NULL && findTheNode(arr, y2 + 1, x2) == NULL) && (y1 == y2)) {
@@ -162,94 +183,60 @@ bool UandZcheck(CELL_2** arr, int y1, int x1, int y2, int x2) {
     if ((Icheck(arr, y1, x1, 0, x1) || Icheck(arr, y1, x1, 4, x1)) && (y1 != y2)) {
         tempTail = findTheNode(arr, y1, x2);
         if (tempTail == NULL) {
+            int y = y1;
             if ((Icheck(arr, y1, x1, 0, x1))) {
-                int y = y1;
                 while (tempTail == NULL) {
                     y++;
                     tempTail = findTheNode(arr, y, x2);
                 }
             }
+            if (Icheck(arr, y, x2, y2, x2)) {
+                return true;
+            }
+            y = y1;
             if (Icheck(arr, y1, x1, 4, x1)) {
                 tempTail = NULL;
-                int y = y1;
                 while (tempTail == NULL) {
                     y--;
                     tempTail = findTheNode(arr, y, x2);
                 }
+            }
+            if (Icheck(arr, y, tempTail->j, y2, x2)) {
+                return true;
             }
         }
         if (Icheck(arr, tempTail->i, tempTail->j, y2, x2)) {
             return true;
         }
     }
-    else if ((Icheck(arr, y2, x2, 0, x2) || Icheck(arr, y2, x2, 4, x2)) && (y1 != y2)) {
+    if ((Icheck(arr, y2, x2, 0, x2) || Icheck(arr, y2, x2, 4, x2)) && (y1 != y2)) {
         tempTail = findTheNode(arr, y2, x1);
         if (tempTail == NULL) {
+            int y = y2;
             if (Icheck(arr, y2, x2, 0, x2)) {
-                int y = y2;
                 while (tempTail == NULL) {
                     y++;
                     tempTail = findTheNode(arr, y, x1);
                 }
             }
+            if (Icheck(arr, y, x1, y1, x1)) {
+                return true;
+            }
+            y = y2;
+            if (Icheck(arr, y2, x2, 4, x2)) {
+                while (tempTail == NULL) {
+                    y--;
+                    tempTail = findTheNode(arr, y, x1);
+                }
+            }
+            if (Icheck(arr, y, x1, y1, x1)) {
+                return true;
+            }
+        }
+        else {
             if (Icheck(arr, tempTail->i, tempTail->j, y1, x1)) {
                 return true;
             }
-            if (Icheck(arr, y2, x2, 4, x2)) {
-                int y = y1;
-                while (tempTail == NULL) {
-                    y--;
-                    tempTail = findTheNode(arr, y, x1);
-                }
-            }
-        }
-        if (Icheck(arr, tempTail->i, tempTail->j, y1, x1)) {
-            return true;
-        }
-    }
-
-    if (((x1 == 0) || (findTheNode(arr, y1, x1)->next == NULL)) && (x1 != x2)) {
-        tempTail = findTheNode(arr, y2, x1);
-        if (tempTail == NULL) {
-            if (x1 == 0) {
-                int x = x1;
-                while (tempTail == NULL) {
-                    x++;
-                    tempTail = findTheNode(arr, y2, x);
-                }
-            }
-            else {
-                int x = x1;
-                while (tempTail == NULL) {
-                    x--;
-                    tempTail = findTheNode(arr, y2, x);
-                }
-            }
-        }
-        if (Icheck(arr, tempTail->i, tempTail->j, y2, x2)) {
-            return true;
-        }
-    }
-    else if (((x2 == 0) || (findTheNode(arr, y2, x2)->next == NULL)) && (x1 != x2)) {
-        tempTail = findTheNode(arr, y1, x2);
-        if (tempTail == NULL) {
-            if (x2 == 0) {
-                int x = x2;
-                while (tempTail == NULL) {
-                    x++;
-                    tempTail = findTheNode(arr, y1, x);
-                }
-            }
-            else {
-                int x = x2;
-                while (tempTail == NULL) {
-                    x--;
-                    tempTail = findTheNode(arr, y1, x);
-                }
-            }
-        }
-        if (Icheck(arr, tempTail->i, tempTail->j, y1, x1)) {
-            return true;
         }
     }
 
@@ -295,11 +282,12 @@ bool allCheck(CELL_2** arr, int y1, int x1, int y2, int x2) {
     return false;
 }
 
-void deleteNode(CELL_2** arr, int y, int x) {
+void deleteNode(CELL_2** arr, int y, int x, char bg[][41]) {
     CELL_2* p = findTheNode(arr, y, x);
     if (x == 0) {
         if (arr[y]->next == NULL) {
             arr[y]->deleteBox();
+            if (arr[y]->j < 4) displayBackground(bg, arr[y]->j, y);
             arr[y] = NULL;
             return;
         }
@@ -308,6 +296,7 @@ void deleteNode(CELL_2** arr, int y, int x) {
         p = arr[y]->next;
         if (p->next == NULL) {
             p->deleteBox();
+            if (p->j < 4) displayBackground(bg, p->j, y);
             delete p;
             arr[y]->next = NULL;
         }
@@ -319,6 +308,7 @@ void deleteNode(CELL_2** arr, int y, int x) {
             }
             p->c = p->next->c;
             p->next->deleteBox();
+            if (p->next->j < 4) displayBackground(bg, p->next->j, p->next->i);
             delete p->next;
             p->next = NULL;
         }
@@ -331,26 +321,28 @@ void deleteNode(CELL_2** arr, int y, int x) {
         }
         p->c = p->next->c;
         p->next->deleteBox();
+        if (p->next->j < 4) displayBackground(bg, p->next->j, p->next->i);
         delete p->next;
         p->next = NULL;
     }
     else {
         p->deleteBox();
+        if (p->j < 4) displayBackground(bg, p->j, p->i);
         delete p;
         p = findTheNode(arr, y, x - 1);
         p->next = NULL;
     }
 }
 
-void DifMode(CELL_2** arr, int y1, int x1, int y2, int x2) {
+void DifMode(CELL_2** arr, int y1, int x1, int y2, int x2, char bg[][41]) {
     if (x1 > x2)
     {
-        deleteNode(arr, y1, x1);
-        deleteNode(arr, y2, x2);
+        deleteNode(arr, y1, x1, bg);
+        deleteNode(arr, y2, x2, bg);
     }
     else {
-        deleteNode(arr, y2, x2);
-        deleteNode(arr, y1, x1);
+        deleteNode(arr, y2, x2, bg);
+        deleteNode(arr, y1, x1, bg);
     }
 }
 
@@ -358,8 +350,8 @@ bool checkValidPairs(CELL_2** arr) {
     CELL_2* Head, * temp;
     for (int i = 0; i < 5; i++) {
         Head = arr[i];
-        int j = i;
         while (Head != NULL) {
+            int j = i;
             temp = Head->next;
             while (temp == NULL && j < 4) {
                 j++;
