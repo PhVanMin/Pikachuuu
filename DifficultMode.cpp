@@ -56,10 +56,8 @@ void deleteList(CELL_2** arr) {
             temp = arr[i];
             arr[i] = arr[i]->next;
             temp->deleteBox();
-            if (temp->j < 4) {
-                displayBackground(BG, temp->j, i);
-                Sleep(500);
-            }
+            if (temp->j < 4) displayBackground(BG, temp->j, i);
+            Sleep(500);
             delete temp;
         }
     }
@@ -78,11 +76,6 @@ void renderList(CELL_2** arr) {
 }
 
 void move(CELL_2** arr, position& pos, int& status, player& p, position selectedPos[], int& couple) {
-    if ((!checkValidPairs(arr))) {
-        status = 1;
-        return;
-    }
-
     int temp, key;
     temp = _getch();
     if (temp && temp != 224) { // neu ko phai la dau mui ten
@@ -385,6 +378,8 @@ void difficultMode(player& p) {
         renderList(board);
 
         move(board, curPosition, status, p, selectedPos, couple);
+
+        if ((!checkValidPairs(board))) status = 1;
     }
 
     renderList(board);

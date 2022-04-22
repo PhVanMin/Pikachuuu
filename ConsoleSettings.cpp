@@ -17,10 +17,10 @@ void setCursor(bool visible) {
 }
 
 void resizeWindow(int x, int y) {
-    HWND window = GetConsoleWindow();
-    RECT ConsoleRect;
-    GetWindowRect(window, &ConsoleRect);
-    MoveWindow(window, ConsoleRect.left, ConsoleRect.top, x, y, TRUE);
+    HWND console = GetConsoleWindow();
+    RECT r;
+    GetWindowRect(console, &r);
+    MoveWindow(console, r.left, r.top, x, y, TRUE);
 }
 
 void hideScrollBar() {

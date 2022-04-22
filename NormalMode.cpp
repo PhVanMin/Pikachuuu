@@ -54,11 +54,6 @@ void renderBoard(CELL_1** board) {
 }
 // di chuyen
 void move(CELL_1** board, position& pos, int& status, player& p, position selectedPos[], int& couple) {
-    if ((!checkValidPairs(board))) {
-        status = 1;
-        return;
-    }
-
     int temp, key;
     temp = _getch();
     if (temp && temp != 224) { // neu ko phai la dau mui ten
@@ -363,6 +358,8 @@ void normalMode(player& p) {
         renderBoard(board);
 
         move(board, curPosition, status, p, selectedPos, couple);
+
+        if ((!checkValidPairs(board))) status = 1;
     }
 
     renderBoard(board);
